@@ -1,6 +1,10 @@
 const express = require('express')
-
+const userModel= require('../model/user')
 const authRouter = express.Router();
+const {validateSignupData}= require('../utils/validation')
+const bcrypt = require('bcrypt');
+const jwt= require('jsonwebtoken');
+require('dotenv').config();
 
 //signup api code starts from here
 authRouter.post("/register", async (req, res) => {
@@ -30,7 +34,6 @@ authRouter.post("/register", async (req, res) => {
 
   //*****************************************************************//
 
-
   //login api code starts from here
 
   authRouter.post("/login", async (req, res) => {
@@ -44,7 +47,9 @@ authRouter.post("/register", async (req, res) => {
       if (isMatch) {
   
         // Generate and send JWT token
-        res.cookie('token', 'jwt-token')
+        const token= await jwt.sign({_id: user._id}, process.env.JWT_SECRETCODE)
+        console.log(token);
+        res.cookie('token', token)
         
         res.send({ message: "Login successful", user });
       } else {

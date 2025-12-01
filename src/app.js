@@ -4,7 +4,8 @@ const ConnectDB = require("./config/database");
 const userModel = require("./model/user");
 const { validateSignupData } = require('./utils/validation')
 const cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
+const authRouter= require('./routes/auth')
+const profileRouter= require('./routes/profile')
 const app = express();
 
 // Bodyparser middleware
@@ -12,12 +13,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
+app.use("/auth", authRouter);
+app.use("/profile",profileRouter)
 
-app.get("/profile", async (req, res) => {
-  const cookies = req.cookies;
-  console.log(cookies);
-  res.send('reading');
-})
+
 
 
 
