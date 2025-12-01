@@ -4,6 +4,7 @@ const authRouter = express.Router();
 const {validateSignupData}= require('../utils/validation')
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken');
+
 require('dotenv').config();
 
 //signup api code starts from here
@@ -43,14 +44,12 @@ authRouter.post("/register", async (req, res) => {
       const user = await userModel.findOne({ emailId });
       if (!user) return res.status(404).send({ message: "User not found" });
   
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await user.validatePassword(password);
       if (isMatch) {
   
         // Generate and send JWT token
-        const token= await jwt.sign({_id: user._id}, process.env.JWT_SECRETCODE)
-        console.log(token);
-        res.cookie('token', token)
-        
+        const token= await user.getJWT();
+        res.cookie('token', token, {expire: new Date(Date.now() * 360000)})
         res.send({ message: "Login successful", user });
       } else {
         res.status(400).send({ message: "Invalid password" });
