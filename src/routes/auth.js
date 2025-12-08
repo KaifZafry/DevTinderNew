@@ -51,6 +51,7 @@ authRouter.post("/register", async (req, res) => {
         const token= await user.getJWT();
         res.cookie('token', token, {expire: new Date(Date.now() * 360000)})
         res.send({ message: "Login successful", user });
+        
       } else {
         res.status(400).send({ message: "Invalid password" });
       }
