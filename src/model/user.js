@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
 require ('dotenv').config();
+const validator = require('validator')
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
@@ -34,6 +35,19 @@ const userSchema = new mongoose.Schema(
         required: true,
         enum: ['Male', 'Female', 'Other']
     },
+    about:{
+        type: String,
+        default: "This is the default about the user"
+    },
+    photoURL:{
+        type: String,
+        default: "https://avatars.githubusercontent.com/u/106135175?v=4",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new error ('Invalid photoURL'+ value)
+            }
+        }
+    }
   
 });
 

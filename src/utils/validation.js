@@ -15,4 +15,15 @@ else if(! validator.isStrongPassword(password)){
 }
 }
 
-module.exports = {validateSignupData}
+const validateEditProfiledata = (req)=>{
+    
+    const allowedfields= ["firstName", "lastName","gender","emailId","age","about","skills", "photoURL"]
+
+   const isallowedfieds= Object.keys(req.body).every((field)=>{
+    return allowedfields.includes(field)
+    });
+
+    return isallowedfieds
+}
+
+module.exports = {validateSignupData, validateEditProfiledata}

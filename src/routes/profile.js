@@ -3,6 +3,7 @@ const userModel = require('../model/user');
 const profileRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const { userAuth } = require('../middlewares/auth');
+const { validateEditProfiledata } = require('../utils/validation');
 require('dotenv').config();
 
 
@@ -35,6 +36,9 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 // api for update profile
 profileRouter.patch('/profile/edit',userAuth, async (req,res)=>{
   try{
+    if(!validateEditProfiledata(req)){
+      throw new Error ("invalid edit request");
+    }
   const loggedInUser= req.user;
 
   Object.keys(req.body).forEach((key)=> (loggedInUser[key]=req.body[key]))
@@ -52,6 +56,41 @@ profileRouter.patch('/profile/edit',userAuth, async (req,res)=>{
 })
 
 
+//api for update the password(forgot password)
+
+profileRouter.patch('/profile/password', userAuth, async (req,res)=>{
+ 
+  try{
+    const loggedInUser = req.user;
+    const {currentPassword, newPassword}= req.body;
+
+    // validate the password 
+    if(!currentPassword || !newPassword){
+      throw new Error ('Current and new password is required')
+    }
+
+    const isMatch= await bcrypt.compare(currentPassword, loggedInUser.password)
+
+    if (!isMatch){
+      throw new Error ('current password and existing password is Mismatch')
+    }
+
+    // hashed the password
+    const hashedPassword= await bcrypt.hash(newPassword,10);
+
+    loggedInUser.password= hashedPassword
+
+    await loggedInUser.save();
+
+    res.json({message:"Your password has been updated succefully", user: loggedInUser} )
+
+  }
+  catch(err){
+    res.status(400).send('Error:' + err.message)
+  }
+
+
+})
 
 
 
