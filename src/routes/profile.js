@@ -1,7 +1,9 @@
 const express = require('express');
 const userModel = require('../model/user');
+const validator= require('validator')
 const profileRouter = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt= require('bcrypt')
 const { userAuth } = require('../middlewares/auth');
 const { validateEditProfiledata } = require('../utils/validation');
 require('dotenv').config();
@@ -58,7 +60,7 @@ profileRouter.patch('/profile/edit',userAuth, async (req,res)=>{
 
 //api for update the password(forgot password)
 
-profileRouter.patch('/profile/password', userAuth, async (req,res)=>{
+profileRouter.patch('/profile/editPassword', userAuth, async (req,res)=>{
  
   try{
     const loggedInUser = req.user;
@@ -73,6 +75,10 @@ profileRouter.patch('/profile/password', userAuth, async (req,res)=>{
 
     if (!isMatch){
       throw new Error ('current password and existing password is Mismatch')
+    }
+
+    if(!validator.isStrongPassword(newPassword)){
+      throw new Error ('Your New Password is too weak, use Strong password')
     }
 
     // hashed the password
