@@ -51,6 +51,9 @@ const userSchema = new mongoose.Schema(
   
 });
 
+userSchema.index({emailId:1})
+userSchema.index({firstName:1, lastName:1})
+
 userSchema.methods.getJWT = function (){
     const user = this
     const token = jwt.sign({_id: user._id}, process.env.JWT_SECRETCODE)

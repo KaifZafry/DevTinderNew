@@ -84,7 +84,7 @@ profileRouter.patch('/profile/editPassword', userAuth, async (req,res)=>{
     // hashed the password
     const hashedPassword= await bcrypt.hash(newPassword,10);
 
-    loggedInUser.password= hashedPassword
+    loggedInUser.password= hashedPassword;
 
     await loggedInUser.save();
 
@@ -97,7 +97,6 @@ profileRouter.patch('/profile/editPassword', userAuth, async (req,res)=>{
 
 
 })
-
 
 
 
@@ -114,11 +113,6 @@ profileRouter.delete("/api/user", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
-
-
 
 
 
@@ -141,5 +135,6 @@ profileRouter.put("/api/user", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 module.exports = profileRouter;

@@ -31,7 +31,8 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res)
 
         //user can only send one request to one user duplication is not allowed
         const existingRequest = await connectionRequestModel.findOne({
-            $or: [{ fromUserId, toUserId },
+            $or: [
+            { fromUserId, toUserId },
             { fromUserId: toUserId, toUserId: fromUserId }
             ]
 
@@ -42,7 +43,7 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res)
         }
 
 
-
+        //send the data connectionrequest
 
         const connectionRequest = connectionRequestModel({
             fromUserId,
