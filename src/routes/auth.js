@@ -10,7 +10,7 @@ require('dotenv').config();
 //signup api code starts from here
 authRouter.post("/register", async (req, res) => {
     try {
-      const { firstName, lastName, emailId, password, gender } = req.body;
+      const { firstName, lastName, emailId, password, gender,about,photourl } = req.body;
   
       // Validate request data
       validateSignupData(req);
@@ -19,7 +19,7 @@ authRouter.post("/register", async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
   
       // Create and save user
-      const newUser = new userModel({ firstName, lastName, emailId, password: hashedPassword, gender });
+      const newUser = new userModel({ firstName, lastName, emailId, password: hashedPassword, gender,about, photourl });
       await newUser.save();
       console.log("User saved successfully", newUser);
   
