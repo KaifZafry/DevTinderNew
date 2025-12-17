@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
   
 });
 
-userSchema.index({emailId:1})
+
 userSchema.index({firstName:1, lastName:1})
 
 userSchema.methods.getJWT = function (){
